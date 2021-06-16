@@ -13,13 +13,69 @@ from collections import Counter
 
 
 resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
-sys.setrecursionlimit(10**4)
+sys.setrecursionlimit(10**9)
 
-file_path = r"/home/hienpham/Bureau/Bioinformatics_contest/Problem2/2.txt"
+file_path = r"/home/hienpham/Bureau/Bioinformatics_contest/Problem2/4.txt"
 afile = open(file_path, 'r')
 
 answer_file = open('output2_3.txt', 'w')
 
+
+def pos_bin_search(val, ele, arr):
+    
+    if len(arr) == 1:
+        return arr[0]
+    else:
+        low = 0
+        high = len(arr) - 1
+        mid = 0
+    
+    while low <= high:
+        mid = (high + low) // 2
+        if val - (arr[mid] + ele) > 0:
+            low = mid + 1
+        elif val - (arr[mid] + ele) < 0:
+            #high = mid - 1
+            if low != 0:
+                pos_val = arr[low - 1:high + 1]
+            else:
+                pos_val = arr[low:high + 1]
+                
+            sub_arr = [abs(val - ele - x) for x in pos_val]
+            min_delta = min(sub_arr)
+            delta_ind = sub_arr.index(min_delta)
+            return pos_val[delta_ind]
+        else:
+            return arr[mid]
+    return arr[len(arr) - 1]
+ 
+    
+def neg_bin_search(val, ele, arr):
+    
+    if len(arr) == 1:
+        return arr[0]
+    else:
+        low = 0
+        high = len(arr) - 1
+        mid = 0
+    
+    while low <= high:
+        mid = (high + low) // 2
+        if val - (arr[mid] + ele) < 0:
+            high = mid - 1
+        elif val - (arr[mid] + ele) > 0:
+            #low = mid + 1
+            
+            neg_val = arr[low:high + 1]
+            sub_arr = [abs(val - ele - x) for x in neg_val]
+            min_delta = min(sub_arr)
+            delta_ind = sub_arr.index(min_delta)
+            return neg_val[delta_ind]
+        else:
+            return arr[mid]
+    return arr[0]
+
+"""
 def pos_bin_search(val, ele, arr):
     
     med_val = arr[len(arr)//2]
@@ -57,33 +113,36 @@ def neg_bin_search(val, ele, arr):
         min_delta = min(sub_arr)
         delta_ind = sub_arr.index(min_delta)
         return neg_val[delta_ind]
-
+"""
 
 def func(m, a, s, M, K, N):
     
     j_ind = []
     k_ind = []
     count = 0
+    
+    pos_val = [x for x in a if x >= 0]
+    arr_pos = sorted(pos_val)
+    
+    neg_val = [x for x in a if x < 0]
+    arr_neg = sorted(neg_val)
+    
     for val in s:
         count += 1
-        #print(count)
+        print("{} / {}".format(count, N))
         min_delta = math.inf
         for ele in m:
             if val - ele > 0:
                 #do binary search for positive values
-                pos_val = [x for x in a if x > 0]
-                arr = sorted(pos_val)
-                add = pos_bin_search(val, ele, arr)
+                add = pos_bin_search(val, ele, arr_pos)
                 
             elif val - ele < 0:
                 #do binary search for negative values
-                neg_val = [x for x in a if x < 0]
-                arr = sorted(neg_val)
-                add = neg_bin_search(val, ele, arr)
+                add = neg_bin_search(val, ele, arr_neg)
                 
             else:
                 #search for smallest value
-                add = min(a)
+                add = min(a) #fix this!!!
             #print("{} / {}".format(m.index(ele), s.index(val)))    
             nominee_delta = abs(val - (ele + add))
             if nominee_delta < min_delta and ele + add > 0:
