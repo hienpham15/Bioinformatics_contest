@@ -10,7 +10,7 @@ import numpy as np
 from collections import Counter
 
 
-file_path = r"/home/hienpham/Bureau/Bioinformatics_contest/Problem2/3.txt"
+file_path = r"/home/hienpham/Bureau/Bioinformatics_contest/Problem2/2.txt"
 afile = open(file_path, 'r')
 
 answer_file = open('output.txt', 'w')
@@ -35,6 +35,7 @@ def func(m, a, s, M, K, N):
         j_ind.append(delta_ind//K + 1)
         k_ind.append(delta_ind%K + 1)
         
+        #print("{}/{}".format(len(j_ind), N))
     
     return j_ind, k_ind
 
