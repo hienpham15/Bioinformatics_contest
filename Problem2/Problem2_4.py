@@ -12,7 +12,7 @@ import resource
 from collections import Counter
 
 
-file_path = r"/home/hienpham/Bureau/Bioinformatics_contest/Problem2/4.txt"
+file_path = r"/home/hienpham/Bureau/Bioinformatics_contest/Problem2/3.txt"
 afile = open(file_path, 'r')
 
 answer_file = open('output2_4.txt', 'w')
