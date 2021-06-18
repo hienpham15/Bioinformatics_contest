@@ -12,14 +12,28 @@ import resource
 from collections import Counter
 
 
-file_path = r"/home/hienpham/Bureau/Bioinformatics_contest/Problem2/3.txt"
+file_path = r"/home/hienpham/Bureau/Bioinformatics_contest/Problem2/2.txt"
 afile = open(file_path, 'r')
 
 answer_file = open('output2_4.txt', 'w')
 
 
 def pos_bin_search(val, ele, arr):
+    """
+    Parameters
+    ----------
+    val : value from s array.
+    ele : TYPE
+        DESCRIPTION.
+    arr : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    function performs binary search on positive values of a (adducts) array.
     
+
+    """
     if len(arr) == 1:
         return arr[0]
     else:
