@@ -137,7 +137,7 @@ while(True):
         cq = [float(i) for i in afile.readline().rstrip("\r\n").split()]
         p_set.append(cq)
         patient_ith = cq[1:]
-        disease_id = func(n_vertices, v_id, ic, m, q_set, nq, patient_ith)
+        disease_id = func(v_id, ic, m, q_set, patient_ith)
         answer_file.write(str(disease_id) + "\n")
     
     answer_file.close()
