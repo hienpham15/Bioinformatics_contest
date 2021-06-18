@@ -51,39 +51,72 @@ def createTree(ic, v_id):
         
     return Tree 
 
-
-ic = [5, 7, 8, 13, 18, 14, 15, 21, 20, 29]
-v_id = [1, 1, 3, 3, 4, 4, 5, 5, 5]
-tree = createTree(ic, v_id)
-euler = []
-level = []
-
-
-def euler_walk(tree, current, previous, depth):
+class Tree_decomp:
+    def __init__(self):
+        self.euler = []
+        self.level = []
+        
+    def euler_walk(self, tree, current, previous, depth):
+        self.level.append(depth)
+        self.euler.append(current + 1)
     
-    visited = []
-    level.append(depth)
-    euler.append(current)
+        for child in tree.children:
+            #euler.append(child.index)
+            if child.index != previous:
+                self.euler_walk(child, child.index, tree.index, depth + 1)
+                self.euler.append(tree.index + 1)
+                self.level.append(depth)
+        return 
+
+    def LCA(self, node_a, node_b):
+        id_a = self.euler.index(node_a)
+        id_b = self.euler.index(node_b)
+        
+        if id_a <= id_b:
+            depth = min(self.level[id_a:id_b + 1])
+            ans = [i for i, j  in enumerate(self.level[id_a:id_b + 1]) if j == depth]
+            return self.euler[ans[0] + id_a]
+        else:
+            depth = min(self.level[id_b:id_a])
+            ans = [i for i, j  in enumerate(self.level[id_b:id_a + 1]) if j == depth]
+            return self.euler[ans[0] + id_b]
     
-    for child in tree.children:
-        #euler.append(child.index)
-        if child.index != previous:
-            euler_walk(child, child.index, tree.index, depth + 1)
-            euler.append(tree.index)
-            level.append(depth)
-    return 
 
-
-e_w = euler_walk(tree, tree.index, tree.index, 0)
-
-def func(n_vertices, v_id, ic, m, q_set, nq, p_set):
+def func(v_id, ic, m, q_set, patient_ith):
     
     tree = createTree(ic, v_id)
+    tree_decomp = Tree_decomp()
+    tree_decomp.euler_walk(tree, tree.index, tree.index, 0)
     
-    return 
+    hpo_set = []
+    for i in range(m):    
+        disease_ith = q_set[i][1:]
+        hpo = 0
+        for j in range(len(disease_ith)):
+            for k in range(len(patient_ith)):
+                node_lca = tree_decomp.LCA(disease_ith[j], patient_ith[k])
+                hpo += ic[node_lca - 1]
+        
+        hpo_set.append(hpo)
+    
+    disease_id = [i for i, j in enumerate(hpo_set) if j == max(hpo_set)]
+    return disease_id[0] + 1
 
+"""
+ic = [5, 7, 8, 13, 18, 14, 15, 21, 20, 29]
+v_id = [1, 1, 3, 3, 4, 4, 5, 5, 5]
+m = 2
+q_set = [[2, 4, 2], [1, 10]]
+nq = 4
+p_set = [[3, 5, 9, 8], [1, 6], [2, 7, 10], [1, 10]]
 
-
+tree = createTree(ic, v_id)
+tree_de = Tree_decomp()
+tree_de.euler_walk(tree, tree.index, tree.index, 0)
+node = tree_de.LCA(4, 9)
+p_ith = p_set[3][1:]
+di_id = func(v_id, ic, m, q_set, p_ith)
+"""
 
 
 
@@ -103,9 +136,9 @@ while(True):
     for i in range(nq):
         cq = [float(i) for i in afile.readline().rstrip("\r\n").split()]
         p_set.append(cq)
-        
-    disease_id = func(n_vertices, v_id, ic, m, q_set, nq, p_set)
-               
+        patient_ith = cq[1:]
+        disease_id = func(n_vertices, v_id, ic, m, q_set, nq, patient_ith)
+        answer_file.write(str(disease_id) + "\n")
     
     answer_file.close()
     break
