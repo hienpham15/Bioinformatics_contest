@@ -17,12 +17,13 @@ answer_file = open('output3_1.txt', 'w')
 
 
 class Node:
-    def __init__(self, ic):
+    def __init__(self, ic, idx):
         self.data = ic
+        self.index = idx
         self.children = []
         self.parent = None
         
-    def add_child(self, child, parent):
+    def add_child(self, child):
         self.children.append(child)
 
 
@@ -31,16 +32,16 @@ def createNode(v_id, i, created, ic):
     if created[i] is not None:
         return
     
-    created[i] = Node(ic)
-    if created[v_id[i-1]] is None:
+    created[i] = Node(ic, i)
+    if created[v_id[i-1] - 1] is None:
         createNode(v_id, v_id[i-1], created, ic)
         
-    p = created[v_id[i-1]]
+    p = created[v_id[i-1] - 1]
     p.add_child(created[i])
 
 
-def creatTree(ic, v_id):
-    Tree = Node(ic[0]) # root
+def createTree(ic, v_id):
+    Tree = Node(ic[0], 0) # root
     
     created = [None for i in range(len(ic))]
     
@@ -51,9 +52,34 @@ def creatTree(ic, v_id):
     return Tree 
 
 
+ic = [5, 7, 8, 13, 18, 14, 15, 21, 20, 29]
+v_id = [1, 1, 3, 3, 4, 4, 5, 5, 5]
+tree = createTree(ic, v_id)
+euler = []
+level = []
+
+
+def euler_walk(tree, current, previous, depth):
+    
+    visited = []
+    level.append(depth)
+    euler.append(current)
+    
+    for child in tree.children:
+        #euler.append(child.index)
+        if child.index != previous:
+            euler_walk(child, child.index, tree.index, depth + 1)
+            euler.append(tree.index)
+            level.append(depth)
+    return 
+
+
+e_w = euler_walk(tree, tree.index, tree.index, 0)
 
 def func(n_vertices, v_id, ic, m, q_set, nq, p_set):
-        
+    
+    tree = createTree(ic, v_id)
+    
     return 
 
 
